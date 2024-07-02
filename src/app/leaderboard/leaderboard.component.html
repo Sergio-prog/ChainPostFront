@@ -1,0 +1,52 @@
+<!-- <p>leaderboard works!</p> -->
+
+<div class="container">
+    <h1>Leaderboard</h1>
+    <div *ngFor="let post of posts" class="post">
+        <div class="person__wrapper">
+            <div class="person__info">
+                <img [src]="post.author.icon" alt="">
+                <p>{{ post.author.name }}</p>
+            </div>
+            <button mat-flat-button class="follow__button">
+                <span class="follow__text">Follow</span>
+                <span class="icon-container">
+                    <mat-icon>person_add</mat-icon>
+                </span>
+            </button>
+        </div>
+        <div class="content__wrapper">
+            <div class="content__text">
+                {{ post.title }}
+            </div>
+            <div class="content__image">
+                <img [src]="post.url" alt="">
+            </div>
+        </div>
+        <div class="actions__wrapper">
+            <ul class="actions__list">
+                <li class="actions__item">
+                    <button mat-button (click)="toggleLike(post)">
+                        <mat-icon [style.color]="post.liked ? 'red' : '#4B5563'">favorite_border</mat-icon> {{ post.likes }}
+                    </button>
+                </li>
+                <li class="actions__item">
+                    <button mat-button (click)="showComments(post)">
+                        <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }}
+                    </button>
+                </li>
+                <li class="actions__item push-right">
+                    <button mat-button (click)="toggleShare(post)">
+                        <mat-icon>arrow_upward</mat-icon> {{ post.shares }}
+                    </button>
+                </li>
+            </ul>
+            
+            <div class="actions__comment">
+                <!-- Additional actions or comments related to the post -->
+            </div>
+            
+        </div>
+    </div>
+    
+</div>

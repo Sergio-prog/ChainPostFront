@@ -1,0 +1,52 @@
+.header {
+  &__wrapper {
+    display: flex;
+    align-items: center;
+  }
+  &__go-back {
+    padding: 8px 35px 0 0px;
+  }
+}
+
+.white-icon {
+  color: #fff;
+}
+.tab-icon {
+  padding: 3px 10px 0 0;
+  font-size: 20px;
+}
+
+.mat-toolbar-single-row {
+  background-color: #2563eb;
+  color: #ffffff;
+  font-family: Inter;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 20px;
+}
+
+.mat-mdc-tab {
+  font-family: Inter;
+}
+
+.mat-mdc-tab-nav-bar {
+  --mat-tab-header-active-label-text-color: #2563eb;
+  --mdc-tab-indicator-active-indicator-color: #2563eb;
+  --mat-tab-header-active-hover-label-text-color: #2563eb;
+  --mat-tab-header-active-ripple-color: #2563eb;
+  --mat-tab-header-inactive-ripple-color: #2563eb;
+  --mat-tab-header-active-focus-label-text-color: #2563eb;
+  --mat-tab-header-active-focus-indicator-color: #2563eb;
+  --mat-tab-header-active-hover-indicator-color: #2563eb;
+}
+
+::ng-deep .mat-mdc-tab-link .mdc-tab-indicator__content--underline {
+  display: none;
+}
+
+.mdc-tab--active {
+  background-color: #dbeafe;
+  .mdc-tab-indicator__content--underline {
+    height: 0;
+  }
+}
