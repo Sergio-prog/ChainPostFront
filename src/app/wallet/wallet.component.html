@@ -1,1 +1,35 @@
-<p>wallet works!</p>
+<mat-card>
+    <mat-card-header>
+      <mat-card-title class="wallet__title">
+        Balance
+      </mat-card-title>
+      <mat-card-title class="wallet__balance">
+        {{wallet.balance}} $POST
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card>
+  
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title class="wallet__title">
+        Transaction History
+      </mat-card-title>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+        <div class="transactions__list" *ngFor="let transaction of wallet.transactions">
+            <div class="transactions__item">
+                <div class="transactions__left">
+                    <div class="transactions__icon" >
+                        <mat-icon [style.color]="getIcon(transaction.type).color">{{ getIcon(transaction.type).icon }}</mat-icon>
+                      </div>
+                    <div class="transactions__info">
+                        <div class="transactions__type">{{ transaction.type }}</div>
+                        <div class="transactions__date">{{ transaction.date |  date: 'yyyy-MM-dd' }}</div>
+                    </div>
+                </div>
+                <div class="transactions__payment">+{{ transaction.amount }} $POST</div>
+            </div>
+            <mat-divider></mat-divider>
+        </div>
+  </mat-card>
+  
