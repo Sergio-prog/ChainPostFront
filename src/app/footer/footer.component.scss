@@ -1,0 +1,18 @@
+.footer {
+  &__wrapper {
+    color: #4b5563;
+    font-size: 14px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    padding: 17px 17px 10px;
+
+    .mat-icon {
+      font-size: 14px;
+    }
+
+    .footer__text {
+      text-align: center;
+    }
+  }
+}

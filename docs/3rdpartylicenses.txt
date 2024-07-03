@@ -243,6 +243,11 @@ License: "MIT"
 
 
 --------------------------------------------------------------------------------
+Package: @angular/animations
+License: "MIT"
+
+
+--------------------------------------------------------------------------------
 Package: @angular/cdk
 License: "MIT"
 
@@ -295,7 +300,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 --------------------------------------------------------------------------------
-Package: @angular/animations
+Package: @angular/forms
 License: "MIT"
 
 

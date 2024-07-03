@@ -1,0 +1,62 @@
+mat-card {
+  margin: 20px;
+}
+
+.amount {
+  margin-left: auto;
+  font-weight: bold;
+}
+.wallet {
+  &__title {
+    font-size: 16px;
+  }
+  &__balance {
+    font-size: 24px;
+    font-weight: 700;
+    color: #16a34a;
+    font-family: Inter;
+    padding: 15px 0;
+  }
+}
+
+.transactions {
+  &__icon {
+    background-color: #dbeafe;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    .mat-icon {
+      padding-top: 8px;
+      padding-left: 8px;
+      color: #2563eb;
+    }
+  }
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 17px;
+  }
+  &__left {
+    display: flex;
+    align-items: center;
+  }
+  &__info {
+    padding-left: 17px;
+  }
+  &__type {
+    font-weight: 600;
+    font-size: 14px;
+  }
+  &__date {
+    font-size: 12px;
+    padding-top: 5px;
+    color: #4b5563;
+  }
+  &__payment {
+    font-weight: 700;
+    font-size: 14px;
+    color: #16a34a;
+    font-family: Inter;
+  }
+}
