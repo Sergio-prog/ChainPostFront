@@ -1,10 +1,13 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { TransactionType } from '../enums/enums';
 import { MatButtonModule } from '@angular/material/button';
+import { TonConnectUI } from '@tonconnect/ui';
+
+class TCRootElement extends HTMLElement {}
 
 @Component({
   selector: 'app-wallet',
@@ -19,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })
-export class WalletComponent {
+export class WalletComponent implements OnInit {
   wallet = {
     balance: 3000,
     transactions: [
@@ -50,6 +53,15 @@ export class WalletComponent {
       },
     ],
   };
+
+  private tonConnectUI: any;
+
+  ngOnInit() {
+    this.tonConnectUI = new TonConnectUI({
+      manifestUrl: 'https://ton.vote/tonconnect-manifest.json',
+      buttonRootId: 'ton-connect',
+    });
+  }
 
   getIcon(transactionType: TransactionType): { icon: string; color: string } {
     switch (transactionType) {
