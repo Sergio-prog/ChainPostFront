@@ -4,11 +4,18 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { TransactionType } from '../enums/enums';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-wallet',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatListModule, MatIconModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+  ],
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })

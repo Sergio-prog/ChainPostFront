@@ -17,6 +17,9 @@ mat-card {
     font-family: Inter;
     padding: 15px 0;
   }
+  &__container {
+    margin-left: 20px;
+  }
 }
 
 .transactions {
@@ -59,4 +62,11 @@ mat-card {
     color: #16a34a;
     font-family: Inter;
   }
+}
+
+.mat-mdc-unelevated-button:not(:disabled) {
+  background-color: #2563eb;
+  margin-right: 10px;
+  color: white;
+  font-family: Inter;
 }
