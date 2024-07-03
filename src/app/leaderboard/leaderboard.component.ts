@@ -20,11 +20,11 @@ export class LeaderboardComponent {
   posts = [
     {
       author: {
-        icon: '../../assets/images/person.png',
+        icon: 'https://sergio-prog.github.io/ChainPostFront/assets/images/person.png',
         name: 'John Doe',
       },
       title: 'Lorem ipsum dolor sit amet',
-      url: '../../assets/images/post.jpg',
+      url: 'https://sergio-prog.github.io/ChainPostFront/assets/images/post.jpg',
       likes: 150,
       comments: ['super', 'puper'],
       shares: 20,
@@ -32,11 +32,11 @@ export class LeaderboardComponent {
     },
     {
       author: {
-        icon: '../../assets/images/person.png',
+        icon: 'https://sergio-prog.github.io/ChainPostFront/assets/images/person.png',
         name: 'John Doe',
       },
       title: 'Lorem ipsum dolor sit amet',
-      url: '../../assets/images/post.jpg',
+      url: 'https://sergio-prog.github.io/ChainPostFront/assets/images/post.jpg',
       likes: 150,
       comments: ['super', 'puper'],
       shares: 20,
