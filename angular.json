@@ -39,8 +39,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "baseHref": "/ChainPostFront/",
-            "deployUrl": "/ChainPostFront/",
+            "baseHref": "https://sergio-prog.github.io/ChainPostFront/",
+            "deployUrl": "https://sergio-prog.github.io/ChainPostFront/",
             "outputPath": "dist",
             "index": "src/index.html",
             "browser": "src/main.ts",
