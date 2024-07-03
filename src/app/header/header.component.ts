@@ -22,6 +22,6 @@ export class HeaderComponent {
   links = [
     { path: '/leaderboard', label: 'Leaderboard', icon: 'emoji_events' },
     { path: '/wallet', label: 'Wallet', icon: 'account_balance_wallet' },
-    { path: '/my-stats', label: 'My Stats', icon: 'signal_cellular_alt' },
+    { path: '/my-posts', label: 'My Posts', icon: 'signal_cellular_alt' },
   ];
 }
