@@ -1,7 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { Post } from '../models/post.model';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
@@ -15,50 +18,54 @@ import { LeaderboardService } from '../services/leaderboard.service';
     MatIconModule,
     MatButtonModule,
     MatButtonToggleModule,
+    FormsModule,
+    MatInputModule,
+    MatFormFieldModule,
   ],
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.scss',
 })
-export class LeaderboardComponent {
-  // posts = [
-  //   {
-  //     author: {
-  //       icon: '../../assets/images/person.png',
-  //       name: 'John Doe',
-  //     },
-  //     title: 'Lorem ipsum dolor sit amet',
-  //     url: '../../assets/images/post.jpg',
-  //     likes: 150,
-  //     comments: ['super', 'puper'],
-  //     shares: 20,
-  //     liked: false,
-  //   },
-  //   {
-  //     author: {
-  //       icon: '../../assets/images/person.png',
-  //       name: 'John Doe',
-  //     },
-  //     title: 'Lorem ipsum dolor sit amet',
-  //     url: '../../assets/images/post.jpg',
-  //     likes: 150,
-  //     comments: ['super', 'puper'],
-  //     shares: 20,
-  //     liked: false,
-  //   },
-  // ];
+export class LeaderboardComponent implements OnInit {
+  posts = [
+    {
+      author: {
+        icon: '../../assets/images/person.png',
+        name: 'John Doe',
+      },
+      title: 'Lorem ipsum dolor sit amet',
+      url: '../../assets/images/post.jpg',
+      likes: 150,
+      comments: ['super', 'puper'],
+      shares: 20,
+      liked: false,
+    },
+    {
+      author: {
+        icon: '../../assets/images/person.png',
+        name: 'John Doe',
+      },
+      title: 'Lorem ipsum dolor sit amet',
+      url: '../../assets/images/post.jpg',
+      likes: 150,
+      comments: ['super', 'puper'],
+      shares: 20,
+      liked: false,
+    },
+  ];
 
   constructor(private leaderboardService: LeaderboardService) {}
 
   private ngUnsubscribe = new Subject<void>();
   private posts$ = new BehaviorSubject<Post[]>([]);
 
-  posts: Post[] = [];
+  newComment: string = '';
+  // posts: Post[] = [];
 
   ngOnInit(): void {
     this.getPosts()
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((posts) => {
-        this.posts = posts;
+        // this.posts = posts;
       });
     console.log(this.posts);
   }
@@ -91,5 +98,14 @@ export class LeaderboardComponent {
 
   toggleShare(post: any) {
     // Add logic to toggle share
+  }
+  // addComment(post: Post) {
+  addComment(post: any) {
+    if (this.newComment.trim()) {
+      post.comments.push(this.newComment.trim());
+      console.log(post.comments);
+
+      this.newComment = '';
+    }
   }
 }

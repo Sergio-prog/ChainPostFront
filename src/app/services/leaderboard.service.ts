@@ -12,6 +12,6 @@ export class LeaderboardService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<ApiResponse<Post>> {
-    return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts`, {});
+    return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts`);
   }
 }
