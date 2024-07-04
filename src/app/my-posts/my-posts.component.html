@@ -1,1 +1,64 @@
-<p>my-posts works!</p>
+<h1>My Posts</h1>
+<button class="posts__button" mat-flat-button>Post a new ChainPost</button>
+
+<mat-card>
+    <mat-card-header>
+      <mat-card-title>Overall Stats Summary</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div style="display: block;">
+        <canvas baseChart
+                [datasets]="chartData"
+                [data]="barChartData"
+                [legend]="chartLegend"
+                [type]="chartType"
+                [plugins]="chartPlugins">
+        </canvas>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <mat-card class="post__card" *ngFor="let post of posts">
+    <mat-card-header>
+      <div class="post__date">{{ post.created | date: 'yyyy-MM-dd' }}</div>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="content__wrapper">
+            <div class="content__text">
+                {{ post.title }}
+            </div>
+            <div class="content__image">
+                <img [src]="post.url" alt="">
+            </div>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <div class="post__stats">
+        <div class="post__left">
+            <span class="stat">
+                <mat-icon>favorite_border</mat-icon> {{ post.likes }}
+              </span>
+              <span class="stat">
+                <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }}
+              </span>
+              <span class="stat">
+                <mat-icon>person_outline</mat-icon> {{ post.shares }}
+              </span>
+        </div>
+        <div class="stat earnings">
+          <span>+{{ post.earnings }} $POST</span> 
+        </div>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+  
+
+
+
+
+
+
+  <!--
+  [labels]="chartLabels" 
+  [options]="chartOptions"
+  [data]="barChartData" -->

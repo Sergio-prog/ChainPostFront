@@ -1,3 +1,7 @@
+<div class="header">
+  <h1>Wallet</h1>
+  <div id="ton-connect" ></div>
+</div>
 <mat-card>
     <mat-card-header>
       <mat-card-title class="wallet__title">
@@ -8,7 +12,13 @@
       </mat-card-title>
     </mat-card-header>
   </mat-card>
-
+  
+  <div class="wallet__container">
+    <button class="wallet__button" mat-flat-button>Send</button>
+    <button class="wallet__button" mat-flat-button>Receive</button>
+    <button class="wallet__button" mat-flat-button>Exchange</button>
+    
+  </div>
   <mat-card>
     <mat-card-header>
       <mat-card-title class="wallet__title">
@@ -32,3 +42,4 @@
             <mat-divider></mat-divider>
         </div>
   </mat-card>
+  

@@ -8,7 +8,7 @@ import { ApiResponse } from '../models/api-response.model';
 @Injectable({
   providedIn: 'root',
 })
-export class LeaderboardService {
+export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<ApiResponse<Post>> {
