@@ -22,7 +22,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './my-posts.component.scss',
 })
 export class MyPostsComponent {
-  posts: any[] = [];
+  posts: any = [];
 
   constructor(private postsService: PostsService) {
     Chart.register(...registerables);
