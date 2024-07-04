@@ -26,7 +26,7 @@ import { LeaderboardService } from '../services/leaderboard.service';
   styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent implements OnInit {
-  posts: any[] = [
+  defaultPosts: any[] = [
     // {
     //   author: {
     //     icon: 'https://sergio-prog.github.io/ChainPostFront/assets/images/person.png',
@@ -53,6 +53,8 @@ export class LeaderboardComponent implements OnInit {
     // },
   ];
 
+  posts: any[] = [];
+
   constructor(private leaderboardService: LeaderboardService) {}
 
   private ngUnsubscribe = new Subject<void>();
@@ -62,12 +64,16 @@ export class LeaderboardComponent implements OnInit {
   // posts: Post[] = [];
 
   ngOnInit(): void {
-    this.getPosts()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((posts) => {
-        this.posts = posts;
-        console.log('1111', this.posts);
-      });
+    try {
+      this.getPosts()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((posts) => {
+          this.posts = posts;
+        });
+    } catch (error) {
+      console.error('Error', error);
+      this.posts = this.defaultPosts;
+    }
   }
 
   ngOnDestroy(): void {

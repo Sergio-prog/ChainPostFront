@@ -12,6 +12,8 @@ export class LeaderboardService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<ApiResponse<Post>> {
-    return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts/list`);
+    return this.http.get<ApiResponse<Post>>(
+      `http://82.115.223.224:8000/posts/list`,
+    );
   }
 }
