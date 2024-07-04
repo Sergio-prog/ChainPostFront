@@ -13,7 +13,7 @@ export class LeaderboardService {
 
   getPosts(): Observable<ApiResponse<Post>> {
     return this.http.get<ApiResponse<Post>>(
-      `http://82.115.223.224:8000/posts/list`,
+      `http://www.chainmess.com/posts/list`,
     );
   }
 }
