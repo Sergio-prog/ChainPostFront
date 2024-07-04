@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { TransactionType } from '../enums/enums';
 import { MatButtonModule } from '@angular/material/button';
 import { TonConnectUI } from '@tonconnect/ui';
+import TonWeb from 'tonweb';
 
 class TCRootElement extends HTMLElement {}
 
@@ -22,7 +23,7 @@ class TCRootElement extends HTMLElement {}
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })
-export class WalletComponent implements OnInit {
+export class WalletComponent implements OnInit, OnChanges {
   wallet = {
     balance: 3000,
     transactions: [
@@ -61,6 +62,45 @@ export class WalletComponent implements OnInit {
       manifestUrl: 'https://ton.vote/tonconnect-manifest.json',
       buttonRootId: 'ton-connect',
     });
+    console.log(this.tonConnectUI);
+
+    this.tonConnectUI.onStatusChange(async (status: any) => {
+      console.log(this.tonConnectUI.modalState);
+
+      const walletAddress = this.tonConnectUI.wallet.address;
+
+      // THE FOLLOWING CODE TRIGGERS BUFFER ERROR:
+      // const tonweb = new TonWeb();
+      // const balance = await tonweb.provider.getBalance(walletAddress);
+      // console.log(`Balance: ${balance} nanotons`);
+
+      // console.log('Wallet status changed:', status);
+      // // Update the current state if necessary
+      // console.log('Get Balance:', this.tonConnectUI.balance);
+      // console.log('Updated Wallet Info:', this.tonConnectUI.walletInfo);
+      // console.log('Updated Account:', this.tonConnectUI.account);
+      // // console.log('Updated Is Connected Status:', this.tonConnectUI.getBalance());
+    });
+  }
+
+  ngOnChanges() {
+    const currentWallet = this.tonConnectUI.wallet;
+    const currentWalletInfo = this.tonConnectUI.walletInfo;
+    const currentAccount = this.tonConnectUI.account;
+    // const currentIsConnectedStatus = this.tonConnectUI.connected;
+    const currentIsConnectedStatus = this.tonConnectUI.getBalance();
+
+    console.log('currentWallet: ');
+    console.log(currentWallet);
+
+    console.log('currentWalletInfo: ');
+    console.log(currentWalletInfo);
+
+    console.log('currentIsConnectedStatus:');
+    console.log(currentIsConnectedStatus);
+
+    console.log('currentAccount:');
+    console.log(currentAccount);
   }
 
   getIcon(transactionType: TransactionType): { icon: string; color: string } {

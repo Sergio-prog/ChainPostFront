@@ -2,6 +2,16 @@ mat-card {
   margin: 10px;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  padding: 10px 10px 0;
+}
+
 .amount {
   margin-left: auto;
   font-weight: bold;
