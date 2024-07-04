@@ -2,7 +2,7 @@
 
 <div class="container">
     <h1>Leaderboard</h1>
-    <div *ngFor="let post of posts" class="post">
+    <mat-card *ngFor="let post of posts" class="post">
         <div class="person__wrapper">
             <div class="person__info">
                 <img [src]="post.author.icon" alt="">
@@ -63,6 +63,6 @@
               </div>
                             
         </div>
-    </div>
+    </mat-card>
     
 </div>

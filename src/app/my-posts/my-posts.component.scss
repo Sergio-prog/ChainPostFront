@@ -1,0 +1,74 @@
+.mat-mdc-unelevated-button:not(:disabled) {
+  background-color: #0098ea;
+  margin-right: 10px;
+  color: white;
+  font-family: "Roboto";
+  letter-spacing: 0px;
+  border-radius: 25px;
+  height: 40px;
+  font-size: 15px;
+  margin: 0 15px 15px 0;
+}
+
+.post {
+  &__card {
+    margin: 10px 0;
+    padding-bottom: 15px;
+  }
+
+  &__date {
+    font-weight: 700;
+    font-size: 13px;
+    padding: 7px 12px;
+    border-radius: 15px;
+    background-color: #e5e7eb;
+    margin-bottom: 10px;
+  }
+
+  &__stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    width: 100%;
+  }
+  &__left {
+    display: flex;
+  }
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.stat mat-icon {
+  margin-right: 5px;
+}
+
+.earnings {
+  color: green;
+  font-weight: bold;
+}
+
+.content {
+  &__wrapper {
+    border-radius: 8px;
+    background-color: #f3f4f6;
+    padding: 12px;
+  }
+  &__text {
+    line-height: 24px;
+    font-size: 14px;
+    padding-bottom: 12px;
+  }
+  &__image {
+    border-radius: 4px;
+    height: 400px;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
+  }
+}

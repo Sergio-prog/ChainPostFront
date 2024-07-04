@@ -8,7 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { Post } from '../models/post.model';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
-import { LeaderboardService } from '../services/leaderboard.service';
+import { PostsService } from '../services/posts.service';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({
   selector: 'app-leaderboard',
@@ -21,39 +22,15 @@ import { LeaderboardService } from '../services/leaderboard.service';
     FormsModule,
     MatInputModule,
     MatFormFieldModule,
+    MatCardModule,
   ],
   templateUrl: './leaderboard.component.html',
   styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent implements OnInit {
-  posts = [
-    {
-      author: {
-        icon: '../../assets/images/person.png',
-        name: 'John Doe',
-      },
-      title: 'Lorem ipsum dolor sit amet',
-      url: '../../assets/images/post.jpg',
-      likes: 150,
-      comments: ['super', 'puper'],
-      shares: 20,
-      liked: false,
-    },
-    {
-      author: {
-        icon: '../../assets/images/person.png',
-        name: 'John Doe',
-      },
-      title: 'Lorem ipsum dolor sit amet',
-      url: '../../assets/images/post.jpg',
-      likes: 150,
-      comments: ['super', 'puper'],
-      shares: 20,
-      liked: false,
-    },
-  ];
+  posts: any = [];
 
-  constructor(private leaderboardService: LeaderboardService) {}
+  constructor(private postsService: PostsService) {}
 
   private ngUnsubscribe = new Subject<void>();
   private posts$ = new BehaviorSubject<Post[]>([]);
@@ -62,12 +39,13 @@ export class LeaderboardComponent implements OnInit {
   // posts: Post[] = [];
 
   ngOnInit(): void {
-    this.getPosts()
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((posts) => {
-        // this.posts = posts;
-      });
-    console.log(this.posts);
+    this.posts = this.postsService.getPosts();
+    // this.getPosts()
+    //   .pipe(takeUntil(this.ngUnsubscribe))
+    //   .subscribe((posts) => {
+    //     // this.posts = posts;
+    //   });
+    // console.log(this.posts);
   }
 
   ngOnDestroy(): void {
@@ -75,13 +53,13 @@ export class LeaderboardComponent implements OnInit {
     this.ngUnsubscribe.complete();
   }
 
-  getPosts(): Observable<Post[]> {
-    this.leaderboardService.getPosts().subscribe((res) => {
-      this.posts$.next(res.results);
-    });
+  // getPosts(): Observable<Post[]> {
+  //   this.postsService.getPosts().subscribe((res) => {
+  //     this.posts$.next(res.results);
+  //   });
 
-    return this.posts$.asObservable();
-  }
+  //   return this.posts$.asObservable();
+  // }
 
   toggleLike(post: any) {
     post.liked = !post.liked;
