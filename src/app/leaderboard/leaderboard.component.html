@@ -5,7 +5,7 @@
     <mat-card *ngFor="let post of posts" class="post">
         <div class="person__wrapper">
             <div class="person__info">
-                <img [src]="post?.author?.icon || '../../assets/images/person.png'" alt="">
+                <img [src]="getAuthorIcon(post)" alt="">
                 <p>{{ post.author_username }}</p>
             </div>
             <button mat-flat-button class="follow__button">

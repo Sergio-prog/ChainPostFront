@@ -67,7 +67,11 @@ export class LeaderboardComponent implements OnInit {
 
   ngOnInit(): void {
     try {
-      this.posts = this.postsService.getPosts();
+      this.getPosts()
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe((posts) => {
+          this.posts = posts;
+        });
       // this.getPosts()
       //   .pipe(takeUntil(this.ngUnsubscribe))
       //   .subscribe((posts) => {
@@ -84,16 +88,15 @@ export class LeaderboardComponent implements OnInit {
     this.ngUnsubscribe.complete();
   }
 
-  // getPosts(): Observable<Post[]> {
-  //   this.leaderboardService.getPosts().subscribe((res) => {
-  //     console.log('123', res.results);
-  //     this.posts$.next(res.results);
-  //   });
+  getPosts(): Observable<Post[]> {
+    this.postsService.getPosts().subscribe((res) => {
+      this.posts$.next(res.results);
+    });
 
-  //   console.log(this.posts$.asObservable());
+    console.log(this.posts$.asObservable());
 
-  //   return this.posts$.asObservable();
-  // }
+    return this.posts$.asObservable();
+  }
 
   toggleLike(post: any) {
     post.liked = !post.liked;
@@ -119,5 +122,9 @@ export class LeaderboardComponent implements OnInit {
 
       this.newComment = '';
     }
+  }
+
+  getAuthorIcon(post: Post): string {
+    return 'https://sergio-prog.github.io/ChainPostFront/assets/images/person.png';
   }
 }
