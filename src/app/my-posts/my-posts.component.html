@@ -1,5 +1,7 @@
 <h1>My Posts</h1>
-<button class="posts__button" mat-flat-button>Post a new ChainPost</button>
+<a [href]="getPostButtonUri()" target="_blank">
+  <button class="posts__button" mat-flat-button>Post a new ChainPost</button>
+</a>
 
 <mat-card>
     <mat-card-header>

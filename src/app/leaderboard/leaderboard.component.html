@@ -20,7 +20,7 @@
                 {{ post.content }}
             </div>
             <div class="content__image">
-                <img [src]="post.media_link" alt="">
+                <img [src]="getMediaFromPost(post)" alt="">
             </div>
         </div>
         <div class="actions__wrapper">

@@ -14,4 +14,10 @@ export class PostsService {
   getPosts(): Observable<ApiResponse<Post>> {
     return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts/list`);
   }
+
+  getBalance(address: string): Observable<any> {
+    return this.http.get(
+      `${environment.tonCenterUrl}/getAddressBalance?address=${address}`,
+    );
+  }
 }

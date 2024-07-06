@@ -127,4 +127,8 @@ export class LeaderboardComponent implements OnInit {
   getAuthorIcon(post: Post): string {
     return 'https://sergio-prog.github.io/ChainPostFront/assets/images/person.png';
   }
+
+  getMediaFromPost(post: Post): string {
+    return post.media_link;
+  }
 }

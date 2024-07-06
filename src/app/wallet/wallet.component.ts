@@ -7,6 +7,8 @@ import { TransactionType } from '../enums/enums';
 import { MatButtonModule } from '@angular/material/button';
 import { TonConnectUI } from '@tonconnect/ui';
 import TonWeb from 'tonweb';
+import { PostsService } from '../services/posts.service';
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
 
 class TCRootElement extends HTMLElement {}
 
@@ -24,6 +26,8 @@ class TCRootElement extends HTMLElement {}
   styleUrl: './wallet.component.scss',
 })
 export class WalletComponent implements OnInit, OnChanges {
+  constructor(private postsService: PostsService) {}
+
   wallet = {
     balance: 3000,
     transactions: [
@@ -56,6 +60,7 @@ export class WalletComponent implements OnInit, OnChanges {
   };
 
   private tonConnectUI: any;
+  private balance: number = 0;
 
   ngOnInit() {
     this.tonConnectUI = new TonConnectUI({
@@ -67,7 +72,17 @@ export class WalletComponent implements OnInit, OnChanges {
     this.tonConnectUI.onStatusChange(async (status: any) => {
       console.log(this.tonConnectUI.modalState);
 
-      const walletAddress = this.tonConnectUI.wallet.address;
+      const rawAddress = this.tonConnectUI.account.address;
+      const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
+      console.log(userFriendlyAddress);
+
+      this.postsService
+        .getBalance(userFriendlyAddress)
+        .subscribe((response) => {
+          console.log(response);
+          this.balance = response?.result / 10 ** 10;
+          console.log(`Balance: ${this.balance}`);
+        });
 
       // THE FOLLOWING CODE TRIGGERS BUFFER ERROR:
       // const tonweb = new TonWeb();

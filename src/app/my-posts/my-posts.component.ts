@@ -108,4 +108,8 @@ export class MyPostsComponent {
   chartLegend = false;
   chartType: ChartType = 'line';
   chartPlugins = [];
+
+  getPostButtonUri() {
+    return 'https://t.me/Chain_PostBot';
+  }
 }
