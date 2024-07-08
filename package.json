@@ -26,9 +26,11 @@
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
     "@tonconnect/ui": "^2.0.5",
+    "autoprefixer": "^10.4.19",
     "buffer": "^6.0.3",
     "chart.js": "^4.4.3",
     "ng2-charts": "^6.0.1",
+    "postcss": "^8.4.39",
     "rxjs": "~7.8.0",
     "tonweb": "^0.0.66",
     "tslib": "^2.3.0",
@@ -56,6 +58,7 @@
     "lint-staged": "^15.2.7",
     "ng-dotenv": "^1.0.2",
     "prettier": "^3.3.2",
+    "tailwindcss": "^3.4.4",
     "ts-node": "^10.9.2",
     "typescript": "~5.2.2"
   }

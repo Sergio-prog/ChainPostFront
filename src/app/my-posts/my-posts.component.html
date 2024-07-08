@@ -20,15 +20,16 @@
   
   <mat-card class="post__card" *ngFor="let post of posts">
     <mat-card-header>
-      <div class="post__date">{{ post.created | date: 'yyyy-MM-dd' }}</div>
+      <!-- <div class="post__date">{{ post.created | date: 'yyyy-MM-dd' }}</div> -->
+      <div class="post__date">0000-00-00</div>
     </mat-card-header>
     <mat-card-content>
         <div class="content__wrapper">
             <div class="content__text">
-                {{ post.title }}
+                {{ post.content }}
             </div>
             <div class="content__image">
-                <img [src]="post.url" alt="">
+                <img [src]="post.media_link" alt="">
             </div>
         </div>
     </mat-card-content>
@@ -36,17 +37,19 @@
       <div class="post__stats">
         <div class="post__left">
             <span class="stat">
-                <mat-icon>favorite_border</mat-icon> {{ post.likes }}
+                <mat-icon>favorite_border</mat-icon> {{ post.likes_count }}
               </span>
               <span class="stat">
-                <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }}
+                <!-- <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }} -->
+                <mat-icon>chat_bubble_outline</mat-icon> 00
               </span>
               <span class="stat">
-                <mat-icon>person_outline</mat-icon> {{ post.shares }}
+                <mat-icon>person_outline</mat-icon> {{ post.views_count }}
               </span>
         </div>
         <div class="stat earnings">
-          <span>+{{ post.earnings }} $POST</span> 
+          <!-- <span>+{{ post.earnings }} $POST</span>  -->
+          <span>+00 $POST</span> 
         </div>
       </div>
     </mat-card-actions>

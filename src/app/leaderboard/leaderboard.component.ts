@@ -10,6 +10,7 @@ import { Post } from '../models/post.model';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { PostsService } from '../services/posts.service';
 import { MatCardModule } from '@angular/material/card';
+import { ApiResponse } from '../models/api-response.model';
 
 @Component({
   selector: 'app-leaderboard',
@@ -28,24 +29,19 @@ import { MatCardModule } from '@angular/material/card';
   styleUrl: './leaderboard.component.scss',
 })
 export class LeaderboardComponent implements OnInit {
-  posts: any = [];
-
   constructor(private postsService: PostsService) {}
 
   private ngUnsubscribe = new Subject<void>();
   private posts$ = new BehaviorSubject<Post[]>([]);
 
   newComment: string = '';
-  // posts: Post[] = [];
+  posts: Post[] = [];
 
-  ngOnInit(): void {
-    this.posts = this.postsService.getPosts();
-    // this.getPosts()
-    //   .pipe(takeUntil(this.ngUnsubscribe))
-    //   .subscribe((posts) => {
-    //     // this.posts = posts;
-    //   });
-    // console.log(this.posts);
+  ngOnInit() {
+    this.postsService.getPosts().subscribe((response: ApiResponse<Post>) => {
+      this.posts = response.results;
+      console.log('Posts:', this.posts);
+    });
   }
 
   ngOnDestroy(): void {
@@ -61,14 +57,14 @@ export class LeaderboardComponent implements OnInit {
   //   return this.posts$.asObservable();
   // }
 
-  toggleLike(post: any) {
-    post.liked = !post.liked;
-    if (post.liked) {
-      post.likes++;
-    } else {
-      post.likes--;
-    }
-  }
+  // toggleLike(post: Post) {
+  //   post.likes_count = !post.liked;
+  //   if (post.liked) {
+  //     post.likes_count ++;
+  //   } else {
+  //     post.likes_count --;
+  //   }
+  // }
 
   showComments(post: any) {
     // Add logic to show comments
@@ -78,10 +74,10 @@ export class LeaderboardComponent implements OnInit {
     // Add logic to toggle share
   }
   // addComment(post: Post) {
-  addComment(post: any) {
+  addComment(post: Post) {
     if (this.newComment.trim()) {
-      post.comments.push(this.newComment.trim());
-      console.log(post.comments);
+      // post.comments.push(this.newComment.trim());
+      console.log(this.newComment);
 
       this.newComment = '';
     }

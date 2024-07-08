@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+
+import { TonConnectUI } from '@tonconnect/ui';
+import { toUserFriendlyAddress } from '@tonconnect/sdk';
+import { PostsService } from '../services/posts.service';
+import { TonService } from '../services/ton.service';
 
 @Component({
   selector: 'app-header',
@@ -24,4 +29,6 @@ export class HeaderComponent {
     { path: '/wallet', label: 'Wallet', icon: 'account_balance_wallet' },
     { path: '/my-posts', label: 'My Posts', icon: 'person_outline' },
   ];
+
+  constructor(private tonService: TonService) {}
 }

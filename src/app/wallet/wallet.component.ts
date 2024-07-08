@@ -9,6 +9,8 @@ import { TonConnectUI } from '@tonconnect/ui';
 import TonWeb from 'tonweb';
 import { PostsService } from '../services/posts.service';
 import { toUserFriendlyAddress } from '@tonconnect/sdk';
+import { Router } from '@angular/router';
+import { TonService } from '../services/ton.service';
 
 class TCRootElement extends HTMLElement {}
 
@@ -25,8 +27,16 @@ class TCRootElement extends HTMLElement {}
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })
-export class WalletComponent implements OnInit, OnChanges {
-  constructor(private postsService: PostsService) {}
+export class WalletComponent implements AfterViewInit {
+  constructor(
+    private postsService: PostsService,
+    private router: Router,
+    private tonService: TonService,
+  ) {}
+
+  ngAfterViewInit() {
+    this.tonService.initTonConnectUI();
+  }
 
   wallet = {
     balance: 3000,
@@ -59,61 +69,10 @@ export class WalletComponent implements OnInit, OnChanges {
     ],
   };
 
-  private tonConnectUI: any;
-  private balance: number = 0;
+  public balance: number = 0;
 
-  ngOnInit() {
-    this.tonConnectUI = new TonConnectUI({
-      manifestUrl: 'https://ton.vote/tonconnect-manifest.json',
-      buttonRootId: 'ton-connect',
-    });
-    console.log(this.tonConnectUI);
-
-    this.tonConnectUI.onStatusChange(async (status: any) => {
-      console.log(this.tonConnectUI.modalState);
-
-      const rawAddress = this.tonConnectUI.account.address;
-      const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
-      console.log(userFriendlyAddress)
-
-      this.postsService.getBalance(userFriendlyAddress).subscribe((response) => {
-        console.log(response)
-        this.balance = response?.result / 10 ** 10;
-        console.log(`Balance: ${this.balance}`)
-      })
-
-      // THE FOLLOWING CODE TRIGGERS BUFFER ERROR:
-      // const tonweb = new TonWeb();
-      // const balance = await tonweb.provider.getBalance(rawAddress);
-      // console.log(`Balance: ${balance} nanotons`);
-
-      // console.log('Wallet status changed:', status);
-      // // Update the current state if necessary
-      // console.log('Get Balance:', this.tonConnectUI.balance);
-      // console.log('Updated Wallet Info:', this.tonConnectUI.walletInfo);
-      // console.log('Updated Account:', this.tonConnectUI.account);
-      // // console.log('Updated Is Connected Status:', this.tonConnectUI.getBalance());
-    });
-  }
-
-  ngOnChanges() {
-    const currentWallet = this.tonConnectUI.wallet;
-    const currentWalletInfo = this.tonConnectUI.walletInfo;
-    const currentAccount = this.tonConnectUI.account;
-    // const currentIsConnectedStatus = this.tonConnectUI.connected;
-    const currentIsConnectedStatus = this.tonConnectUI.getBalance();
-
-    console.log('currentWallet: ');
-    console.log(currentWallet);
-
-    console.log('currentWalletInfo: ');
-    console.log(currentWalletInfo);
-
-    console.log('currentIsConnectedStatus:');
-    console.log(currentIsConnectedStatus);
-
-    console.log('currentAccount:');
-    console.log(currentAccount);
+  redirectToGame() {
+    this.router.navigate(['/game']);
   }
 
   getIcon(transactionType: TransactionType): { icon: string; color: string } {

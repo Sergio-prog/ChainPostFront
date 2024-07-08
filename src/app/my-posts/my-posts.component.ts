@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PostsService } from '../services/posts.service';
 import { CommonModule } from '@angular/common';
+import { Post } from '../models/post.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Component({
   selector: 'app-my-posts',
@@ -22,16 +24,18 @@ import { CommonModule } from '@angular/common';
   styleUrl: './my-posts.component.scss',
 })
 export class MyPostsComponent {
-  posts: any = [];
+  posts: Post[] = [];
 
   constructor(private postsService: PostsService) {
     Chart.register(...registerables);
   }
 
   ngOnInit() {
-    this.posts = this.postsService.getPosts();
+    this.postsService.getPosts().subscribe((response: ApiResponse<Post>) => {
+      this.posts = response.results;
+      console.log('Posts:', this.posts);
+    });
   }
-
   chartOptions = {
     responsive: true,
     scales: {

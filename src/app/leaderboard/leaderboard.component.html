@@ -5,8 +5,9 @@
     <mat-card *ngFor="let post of posts" class="post">
         <div class="person__wrapper">
             <div class="person__info">
-                <img [src]="post.author.icon" alt="">
-                <p>{{ post.author.name }}</p>
+                <!-- <img [src]="post.author.icon" alt=""> -->
+                <!-- <p>{{ post.author.name }}</p> -->
+                <p>John Dou</p>
             </div>
             <button mat-flat-button class="follow__button">
                 <span class="follow__text">Follow</span>
@@ -17,27 +18,31 @@
         </div>
         <div class="content__wrapper">
             <div class="content__text">
-                {{ post.title }}
+                {{ post.content }}
             </div>
             <div class="content__image">
-                <img [src]="post.url" alt="">
+                <img [src]="post.media_link" alt="">
             </div>
         </div>
         <div class="actions__wrapper">
             <ul class="actions__list">
                 <li class="actions__item">
-                    <button mat-button (click)="toggleLike(post)">
-                        <mat-icon [style.color]="post.liked ? '#DC2626' : '#4B5563'">favorite_border</mat-icon> {{ post.likes }}
+                    <!-- <button mat-button (click)="toggleLike(post)"> -->
+                    <button mat-button>
+                        <!-- <mat-icon [style.color]="post.liked ? '#DC2626' : '#4B5563'">favorite_border</mat-icon> {{ post.likes }} -->
+                        <mat-icon [style.color]="false ? '#DC2626' : '#4B5563'">favorite_border</mat-icon> {{ post.likes_count }}
                     </button>
                 </li>
                 <li class="actions__item">
                     <button mat-button (click)="showComments(post)">
-                        <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }}
+                        <!-- <mat-icon>chat_bubble_outline</mat-icon> {{ post.comments.length }} -->
+                        <mat-icon>chat_bubble_outline</mat-icon> 00
                     </button>
                 </li>
                 <li class="actions__item push-right">
                     <button mat-button (click)="toggleShare(post)">
-                        <mat-icon>arrow_upward</mat-icon> {{ post.shares }}
+                        <!-- <mat-icon>arrow_upward</mat-icon> {{ post.shares }} -->
+                        <mat-icon>arrow_upward</mat-icon> {{ post.views_count }}
                     </button>
                 </li>
             </ul>
