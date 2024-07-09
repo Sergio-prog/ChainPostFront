@@ -4,7 +4,11 @@ import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { filter } from 'rxjs';
-
+declare global {
+  interface Window {
+    Telegram: any; // Define the Telegram type based on your application's needs
+  }
+}
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -14,7 +18,9 @@ import { filter } from 'rxjs';
 })
 export class AppComponent {
   constructor(private router: Router) {}
-
+  public initData: any;
+  public parsedObject: any;
+  public parsedObject1: any;
   ngOnInit() {
     // Subscribe to router events to detect route changes
     this.router.events
@@ -23,6 +29,28 @@ export class AppComponent {
         // Check current route and update boolean flag
         this.checkGamePage();
       });
+
+    if (window.Telegram && window.Telegram.WebApp) {
+      console.log('Telegram WebApp is available:', window.Telegram.WebApp);
+
+      this.initData = window.Telegram.WebAppUser;
+      this.parsedObject1 = JSON.parse(this.initData);
+      console.log('user: ', this.parsedObject1);
+      // if (this.initData) {
+      //   try {
+      //     let converted = decodeURIComponent(this.initData);
+      //     this.parsedObject = JSON.parse(converted);
+      //     console.log('Parsed Object:', this.parsedObject);
+      //   } catch (error) {
+      //     console.error('Error parsing JSON:', error);
+      //   }
+      // } else {
+      //   this.initData = 'initData is empty or not available';
+      //   console.warn('initData is empty or not available');
+      // }
+    } else {
+      console.log('Telegram WebApp is not available');
+    }
   }
 
   // Method to check if the current route is the game page

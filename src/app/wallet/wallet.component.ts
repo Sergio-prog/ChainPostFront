@@ -27,15 +27,16 @@ class TCRootElement extends HTMLElement {}
   templateUrl: './wallet.component.html',
   styleUrl: './wallet.component.scss',
 })
-export class WalletComponent implements AfterViewInit {
+export class WalletComponent implements OnInit {
   constructor(
     private postsService: PostsService,
     private router: Router,
     private tonService: TonService,
   ) {}
 
-  ngAfterViewInit() {
+  async ngOnInit() {
     this.tonService.initTonConnectUI();
+    this.tonService.getToken();
   }
 
   wallet = {

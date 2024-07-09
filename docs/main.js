@@ -76811,10 +76811,11 @@ var TonConnectUI = class {
 
 // src/app/services/ton.service.ts
 var _TonService = class _TonService {
-  constructor(postsService) {
+  constructor(postsService, http) {
     this.postsService = postsService;
+    this.http = http;
+    this.token = "";
   }
-  // Method to initialize TonConnectUI
   initTonConnectUI() {
     this.tonConnectUI = new TonConnectUI({
       manifestUrl: "https://ton.vote/tonconnect-manifest.json",
@@ -76833,9 +76834,17 @@ var _TonService = class _TonService {
       console.log(`Balance: ${balance}`);
     });
   }
+  getToken() {
+    return this.token || localStorage.getItem("accessToken");
+  }
+  getUserData() {
+    const token = this.getToken();
+    const headers = new HttpHeaders().set("Authorization", `Bearer ${token}`);
+    return this.http.get("/api/user/data/", { headers });
+  }
 };
 _TonService.\u0275fac = function TonService_Factory(t2) {
-  return new (t2 || _TonService)(\u0275\u0275inject(PostsService));
+  return new (t2 || _TonService)(\u0275\u0275inject(PostsService), \u0275\u0275inject(HttpClient));
 };
 _TonService.\u0275prov = /* @__PURE__ */ \u0275\u0275defineInjectable({ token: _TonService, factory: _TonService.\u0275fac, providedIn: "root" });
 var TonService = _TonService;
@@ -76911,8 +76920,11 @@ var _WalletComponent = class _WalletComponent {
     };
     this.balance = 0;
   }
-  ngAfterViewInit() {
-    this.tonService.initTonConnectUI();
+  ngOnInit() {
+    return __async(this, null, function* () {
+      this.tonService.initTonConnectUI();
+      this.tonService.getToken();
+    });
   }
   redirectToGame() {
     this.router.navigate(["/game"]);
@@ -92704,8 +92716,8 @@ var MyPostsComponent = _MyPostsComponent;
 // src/app/services/points-energy.service.ts
 var _PointsEnergyService = class _PointsEnergyService {
   constructor() {
-    this.pointsSubject = new BehaviorSubject(29857775);
-    this.energySubject = new BehaviorSubject(2532);
+    this.pointsSubject = new BehaviorSubject(0);
+    this.energySubject = new BehaviorSubject(0);
     this.clicksSubject = new BehaviorSubject([]);
     this.points$ = this.pointsSubject.asObservable();
     this.energy$ = this.energySubject.asObservable();
@@ -92713,12 +92725,29 @@ var _PointsEnergyService = class _PointsEnergyService {
     this.pointsToAdd = 12;
     this.energyToReduce = 12;
     this.maxEnergy = 6500;
+    this.loadState();
+  }
+  saveState() {
+    localStorage.setItem("points", this.pointsSubject.value.toString());
+    localStorage.setItem("energy", this.energySubject.value.toString());
+  }
+  loadState() {
+    const savedPoints = localStorage.getItem("points");
+    const savedEnergy = localStorage.getItem("energy");
+    if (savedPoints !== null) {
+      this.pointsSubject.next(Number(savedPoints));
+    }
+    if (savedEnergy !== null) {
+      this.energySubject.next(Number(savedEnergy));
+    }
   }
   increasePoints() {
     this.pointsSubject.next(this.pointsSubject.value + this.pointsToAdd);
+    this.saveState();
   }
   decreaseEnergy() {
     this.energySubject.next(Math.max(0, this.energySubject.value - this.energyToReduce));
+    this.saveState();
   }
   addClick(click) {
     this.clicksSubject.next([...this.clicksSubject.value, click]);
@@ -92726,8 +92755,21 @@ var _PointsEnergyService = class _PointsEnergyService {
   removeClick(id) {
     this.clicksSubject.next(this.clicksSubject.value.filter((click) => click.id !== id));
   }
-  restoreEnergy() {
-    this.energySubject.next(Math.min(this.maxEnergy, this.energySubject.value + 1));
+  startEnergyRestoration() {
+    this.energyInterval = setInterval(() => {
+      this.energySubject.next(Math.min(this.maxEnergy, this.energySubject.value + 1));
+      this.saveState();
+    }, 100);
+  }
+  stopEnergyRestoration() {
+    if (this.energyInterval) {
+      clearInterval(this.energyInterval);
+      this.energyInterval = null;
+    }
+  }
+  addPoints(points) {
+    this.pointsSubject.next(this.pointsSubject.value + points);
+    this.saveState();
   }
 };
 _PointsEnergyService.\u0275fac = function PointsEnergyService_Factory(t2) {
@@ -92740,7 +92782,7 @@ var PointsEnergyService = _PointsEnergyService;
 function GameComponent_div_61_Template(rf, ctx) {
   if (rf & 1) {
     const _r1 = \u0275\u0275getCurrentView();
-    \u0275\u0275elementStart(0, "div")(1, "div", 39);
+    \u0275\u0275elementStart(0, "div")(1, "div", 40);
     \u0275\u0275listener("animationend", function GameComponent_div_61_Template_div_animationend_1_listener() {
       const click_r2 = \u0275\u0275restoreView(_r1).$implicit;
       const ctx_r2 = \u0275\u0275nextContext();
@@ -92760,37 +92802,40 @@ var _GameComponent = class _GameComponent {
   constructor(pointsEnergyService, location2) {
     this.pointsEnergyService = pointsEnergyService;
     this.location = location2;
+    this.inviteLink = "https://yourapp.com/invite?ref=YOUR_REFERRAL_CODE";
     this.points$ = this.pointsEnergyService.points$;
     this.energy$ = this.pointsEnergyService.energy$;
     this.clicks$ = this.pointsEnergyService.clicks$;
   }
   ngOnInit() {
-    setInterval(() => {
-      this.pointsEnergyService.restoreEnergy();
-    }, 100);
+    this.pointsEnergyService.startEnergyRestoration();
+  }
+  ngOnDestroy() {
+    this.pointsEnergyService.stopEnergyRestoration();
   }
   handleClick(event) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-    if (this.pointsEnergyService.energySubject.value - this.pointsEnergyService.energyToReduce < 0) {
-      return;
-    }
     this.pointsEnergyService.increasePoints();
     this.pointsEnergyService.decreaseEnergy();
-    this.pointsEnergyService.addClick({ id: Date.now(), x, y });
+    const click = { id: Date.now(), x: event.clientX, y: event.clientY };
+    this.pointsEnergyService.addClick(click);
   }
-  handleAnimationEnd(id) {
-    this.pointsEnergyService.removeClick(id);
+  inviteFren() {
+    const botUsername = "Chain_PostBot";
+    const inviteMessage = `Join me in using ${botUsername} on Telegram!`;
+    const telegramLink = `https://t.me/${botUsername}?text=${encodeURIComponent(inviteMessage)}`;
+    window.open(telegramLink, "_blank");
   }
   goBack() {
     this.location.back();
+  }
+  handleAnimationEnd(id) {
+    this.pointsEnergyService.removeClick(id);
   }
 };
 _GameComponent.\u0275fac = function GameComponent_Factory(t2) {
   return new (t2 || _GameComponent)(\u0275\u0275directiveInject(PointsEnergyService), \u0275\u0275directiveInject(Location));
 };
-_GameComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _GameComponent, selectors: [["app-game"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 63, vars: 13, consts: [[1, "bg-gradient-main", "min-h-screen", "px-4", "flex", "flex-col", "items-center", "text-white", "font-medium"], [1, "absolute", "inset-0", "h-1/2", "bg-gradient-overlay", "z-0"], [1, "absolute", "inset-0", "flex", "items-center", "justify-center", "z-0"], [1, "radial-gradient-overlay"], [1, "w-full", "z-10"], [1, "arrow__back", "fixed", "top-0", "left-0", "mt-4", "ml-4", "bg-[#1f1f1f]", "text-center", "py-2", "rounded-xl", "cursor-pointer", "z-10", 3, "click"], [1, "text-lg", "flex", "items-center", "gap-1"], [1, "fixed", "top-16", "left-0", "w-full", "px-4", "z-10", "flex", "flex-col", "items-center", "text-white"], [1, "w-full", "cursor-pointer"], [1, "bg-[#1f1f1f]", "text-center", "py-2", "rounded-xl"], [1, "text-lg"], [1, "fixed", "top-24", "left-0", "w-full", "px-4", "z-10", "flex", "flex-col", "items-center", "text-white"], [1, "mt-12", "text-5xl", "font-bold", "flex", "items-center"], ["src", "assets/images/coin.png", "width", "44", "height", "44"], [1, "ml-2"], [1, "text-base", "mt-2", "flex", "items-center"], ["src", "assets/images/trophy.png", "width", "24", "height", "24"], [1, "ml-1"], [1, "fixed", "bottom-0", "left-0", "w-full", "px-4", "pb-4", "z-10"], [1, "w-full", "flex", "justify-between", "gap-2"], [1, "w-1/3", "flex", "items-center", "justify-start", "max-w-32"], [1, "flex", "items-center", "justify-center"], ["src", "assets/images/high-voltage.png", "width", "44", "height", "44", "alt", "High Voltage"], [1, "ml-2", "text-left"], [1, "text-white", "text-2xl", "font-bold", "block"], [1, "text-white", "text-large", "opacity-75"], [1, "flex-grow", "flex", "items-center", "max-w-60", "text-sm"], [1, "w-full", "bg-[#fad258]", "py-4", "rounded-2xl", "flex", "justify-around"], [1, "flex", "flex-col", "items-center", "gap-1"], ["src", "assets/images/bear.png", "width", "24", "height", "24", "alt", "Bear"], [1, "h-[48px]", "w-[2px]", "bg-[#fddb6d]"], ["src", "assets/images/coin.png", "width", "24", "height", "24", "alt", "Coin"], ["src", "assets/images/rocket.png", "width", "24", "height", "24", "alt", "Rocket"], [1, "w-full", "bg-[#f9c035]", "rounded-full", "mt-4"], [1, "bg-gradient-to-r", "from-[#f3c45a]", "to-[#fffad0]", "h-4", "rounded-full"], [1, "flex-grow", "fixed", "top-72", "left-0", "w-full", "flex", "items-center", "justify-center"], [1, "relative", "mt-4", 3, "click"], ["src", "assets/images/notcoin.png", "width", "256", "height", "256", "alt", "Notcoin"], [4, "ngFor", "ngForOf"], [1, "absolute", "text-5xl", "font-bold", "opacity-0", 3, "animationend", "ngClass"]], template: function GameComponent_Template(rf, ctx) {
+_GameComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _GameComponent, selectors: [["app-game"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 63, vars: 13, consts: [[1, "bg-gradient-main", "min-h-screen", "px-4", "flex", "flex-col", "items-center", "text-white", "font-medium"], [1, "absolute", "inset-0", "h-1/2", "bg-gradient-overlay", "z-0"], [1, "absolute", "inset-0", "flex", "items-center", "justify-center", "z-0"], [1, "radial-gradient-overlay"], [1, "w-full", "z-10"], [1, "arrow__back", "fixed", "top-0", "left-0", "mt-4", "ml-4", "bg-[#1f1f1f]", "text-center", "py-2", "rounded-xl", "cursor-pointer", "z-10", 3, "click"], [1, "text-lg", "flex", "items-center", "gap-1"], [1, "fixed", "top-16", "left-0", "w-full", "px-4", "z-10", "flex", "flex-col", "items-center", "text-white"], [1, "w-full", "cursor-pointer"], [1, "bg-[#1f1f1f]", "text-center", "py-2", "rounded-xl"], [1, "text-lg"], [1, "fixed", "top-24", "left-0", "w-full", "px-4", "z-10", "flex", "flex-col", "items-center", "text-white"], [1, "mt-12", "text-5xl", "font-bold", "flex", "items-center"], ["src", "assets/images/coin.png", "width", "44", "height", "44"], [1, "ml-2"], [1, "text-base", "mt-2", "flex", "items-center"], ["src", "assets/images/trophy.png", "width", "24", "height", "24"], [1, "ml-1"], [1, "fixed", "bottom-0", "left-0", "w-full", "px-4", "pb-4", "z-10"], [1, "w-full", "flex", "justify-between", "gap-2"], [1, "w-1/3", "flex", "items-center", "justify-start", "max-w-32"], [1, "flex", "items-center", "justify-center"], ["src", "assets/images/high-voltage.png", "width", "44", "height", "44", "alt", "High Voltage"], [1, "ml-2", "text-left"], [1, "text-white", "text-2xl", "font-bold", "block"], [1, "text-white", "text-large", "opacity-75"], [1, "flex-grow", "flex", "items-center", "max-w-60", "text-sm"], [1, "w-full", "bg-[#fad258]", "py-4", "rounded-2xl", "flex", "justify-around"], [1, "flex", "flex-col", "items-center", "gap-1", 3, "click"], ["src", "assets/images/bear.png", "width", "24", "height", "24", "alt", "Bear"], [1, "h-[48px]", "w-[2px]", "bg-[#fddb6d]"], [1, "flex", "flex-col", "items-center", "gap-1"], ["src", "assets/images/coin.png", "width", "24", "height", "24", "alt", "Coin"], ["src", "assets/images/rocket.png", "width", "24", "height", "24", "alt", "Rocket"], [1, "w-full", "bg-[#f9c035]", "rounded-full", "mt-4"], [1, "bg-gradient-to-r", "from-[#f3c45a]", "to-[#fffad0]", "h-4", "rounded-full"], [1, "flex-grow", "fixed", "top-64", "left-0", "w-full", "flex", "items-center", "justify-center"], [1, "relative", "mt-4", 3, "click"], ["src", "assets/images/notcoin.png", "width", "256", "height", "256", "alt", "Notcoin"], [4, "ngFor", "ngForOf"], [1, "absolute", "text-5xl", "font-bold", "opacity-0", 3, "animationend", "ngClass"]], template: function GameComponent_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 0);
     \u0275\u0275element(1, "div", 1);
@@ -92832,32 +92877,35 @@ _GameComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _
     \u0275\u0275text(38, "/ 6500");
     \u0275\u0275elementEnd()()()();
     \u0275\u0275elementStart(39, "div", 26)(40, "div", 27)(41, "button", 28);
+    \u0275\u0275listener("click", function GameComponent_Template_button_click_41_listener() {
+      return ctx.inviteFren();
+    });
     \u0275\u0275element(42, "img", 29);
     \u0275\u0275elementStart(43, "span");
     \u0275\u0275text(44, "Frens");
     \u0275\u0275elementEnd()();
     \u0275\u0275element(45, "div", 30);
-    \u0275\u0275elementStart(46, "button", 28);
-    \u0275\u0275element(47, "img", 31);
+    \u0275\u0275elementStart(46, "button", 31);
+    \u0275\u0275element(47, "img", 32);
     \u0275\u0275elementStart(48, "span");
     \u0275\u0275text(49, "Earn");
     \u0275\u0275elementEnd()();
     \u0275\u0275element(50, "div", 30);
-    \u0275\u0275elementStart(51, "button", 28);
-    \u0275\u0275element(52, "img", 32);
+    \u0275\u0275elementStart(51, "button", 31);
+    \u0275\u0275element(52, "img", 33);
     \u0275\u0275elementStart(53, "span");
     \u0275\u0275text(54, "Boosts");
     \u0275\u0275elementEnd()()()()();
-    \u0275\u0275elementStart(55, "div", 33);
-    \u0275\u0275element(56, "div", 34);
+    \u0275\u0275elementStart(55, "div", 34);
+    \u0275\u0275element(56, "div", 35);
     \u0275\u0275pipe(57, "async");
     \u0275\u0275elementEnd()();
-    \u0275\u0275elementStart(58, "div", 35)(59, "div", 36);
+    \u0275\u0275elementStart(58, "div", 36)(59, "div", 37);
     \u0275\u0275listener("click", function GameComponent_Template_div_click_59_listener($event) {
       return ctx.handleClick($event);
     });
-    \u0275\u0275element(60, "img", 37);
-    \u0275\u0275template(61, GameComponent_div_61_Template, 3, 5, "div", 38);
+    \u0275\u0275element(60, "img", 38);
+    \u0275\u0275template(61, GameComponent_div_61_Template, 3, 5, "div", 39);
     \u0275\u0275pipe(62, "async");
     \u0275\u0275elementEnd()()()();
   }
@@ -97812,7 +97860,7 @@ var FooterComponent = _FooterComponent;
 })();
 
 // src/app/app.component.ts
-function AppComponent_app_footer_3_Template(rf, ctx) {
+function AppComponent_app_footer_4_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275element(0, "app-footer");
   }
@@ -97825,6 +97873,14 @@ var _AppComponent = class _AppComponent {
     this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
       this.checkGamePage();
     });
+    if (window.Telegram && window.Telegram.WebApp) {
+      console.log("Telegram WebApp is available:", window.Telegram.WebApp);
+      this.initData = window.Telegram.WebAppUser;
+      this.parsedObject1 = JSON.parse(this.initData);
+      console.log("user: ", this.parsedObject1);
+    } else {
+      console.log("Telegram WebApp is not available");
+    }
   }
   // Method to check if the current route is the game page
   isGamePage() {
@@ -97838,21 +97894,24 @@ var _AppComponent = class _AppComponent {
 _AppComponent.\u0275fac = function AppComponent_Factory(t2) {
   return new (t2 || _AppComponent)(\u0275\u0275directiveInject(Router));
 };
-_AppComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AppComponent, selectors: [["app-root"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 4, vars: 1, consts: [[1, "container"], [4, "ngIf"]], template: function AppComponent_Template(rf, ctx) {
+_AppComponent.\u0275cmp = /* @__PURE__ */ \u0275\u0275defineComponent({ type: _AppComponent, selectors: [["app-root"]], standalone: true, features: [\u0275\u0275StandaloneFeature], decls: 5, vars: 2, consts: [[1, "container"], [4, "ngIf"]], template: function AppComponent_Template(rf, ctx) {
   if (rf & 1) {
     \u0275\u0275elementStart(0, "div", 0);
-    \u0275\u0275element(1, "app-header")(2, "router-outlet");
-    \u0275\u0275template(3, AppComponent_app_footer_3_Template, 1, 0, "app-footer", 1);
+    \u0275\u0275text(1);
+    \u0275\u0275element(2, "app-header")(3, "router-outlet");
+    \u0275\u0275template(4, AppComponent_app_footer_4_Template, 1, 0, "app-footer", 1);
     \u0275\u0275elementEnd();
   }
   if (rf & 2) {
+    \u0275\u0275advance();
+    \u0275\u0275textInterpolate1(" ", ctx.parsedObject1, " ");
     \u0275\u0275advance(3);
     \u0275\u0275property("ngIf", !ctx.isGamePage());
   }
 }, dependencies: [CommonModule, NgIf, RouterOutlet, HeaderComponent, FooterComponent] });
 var AppComponent = _AppComponent;
 (() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AppComponent, { className: "AppComponent", filePath: "src\\app\\app.component.ts", lineNumber: 15 });
+  (typeof ngDevMode === "undefined" || ngDevMode) && \u0275setClassDebugInfo(AppComponent, { className: "AppComponent", filePath: "src\\app\\app.component.ts", lineNumber: 19 });
 })();
 
 // src/main.ts
