@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { TonConnectUI, toUserFriendlyAddress } from '@tonconnect/ui';
 import { PostsService } from './posts.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TonService {
-  private tonConnectUI: any; // Adjust type as per your TonConnectUI typings
+  private tonConnectUI: any;
+  private token: string = '';
 
-  constructor(private postsService: PostsService) {}
+  constructor(
+    private postsService: PostsService,
+    private http: HttpClient,
+  ) {}
 
-  // Method to initialize TonConnectUI
   initTonConnectUI(): void {
     this.tonConnectUI = new TonConnectUI({
       manifestUrl: 'https://ton.vote/tonconnect-manifest.json',
@@ -20,22 +25,31 @@ export class TonService {
     this.tonConnectUI.onStatusChange(async (status: any) => {
       console.log(this.tonConnectUI.modalState);
 
-      // Example: Fetch balance when connected
       const rawAddress = this.tonConnectUI.account.address;
       const userFriendlyAddress = toUserFriendlyAddress(rawAddress);
 
-      // Call service method to fetch balance
+      // const response: any = await of(this.http.post('/api/auth/wallet/', { wallet_address: rawAddress }));
+      // this.token = response.access;
+      // localStorage.setItem('accessToken', this.token);
+
       this.getBalance(userFriendlyAddress);
     });
   }
 
   private getBalance(address: string): void {
-    // Example: Implement your logic to fetch balance using a service method
-    // Replace with actual implementation
     this.postsService.getBalance(address).subscribe((response) => {
       const balance = response?.result / 10 ** 10;
       console.log(`Balance: ${balance}`);
-      // Handle balance update or store in a service property for components to use
     });
+  }
+
+  getToken() {
+    return this.token || localStorage.getItem('accessToken');
+  }
+
+  getUserData() {
+    const token = this.getToken();
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get('/api/user/data/', { headers });
   }
 }
