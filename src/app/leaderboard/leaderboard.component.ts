@@ -129,6 +129,8 @@ export class LeaderboardComponent implements OnInit {
   }
 
   getMediaFromPost(post: Post): string {
+    console.log(post.media_link);
+
     return post.media_link;
   }
 }

@@ -12,7 +12,9 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<ApiResponse<Post>> {
-    return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts/list`);
+    return this.http.get<ApiResponse<Post>>(
+      `${environment.apiUrl}/posts/list?page_size=100`,
+    );
   }
 
   getBalance(address: string): Observable<any> {
