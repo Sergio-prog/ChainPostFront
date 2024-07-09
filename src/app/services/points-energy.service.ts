@@ -79,4 +79,9 @@ export class PointsEnergyService {
       this.energyInterval = null;
     }
   }
+
+  addPoints(points: number) {
+    this.pointsSubject.next(this.pointsSubject.value + points);
+    this.saveState();
+  }
 }

@@ -18,6 +18,8 @@ export class GameComponent implements OnInit, OnDestroy {
   energy$: Observable<number>;
   clicks$: Observable<{ id: number; x: number; y: number }[]>;
 
+  inviteLink = 'https://yourapp.com/invite?ref=YOUR_REFERRAL_CODE';
+
   constructor(
     private pointsEnergyService: PointsEnergyService,
     private location: Location,
@@ -39,6 +41,19 @@ export class GameComponent implements OnInit, OnDestroy {
     this.pointsEnergyService.decreaseEnergy();
     const click = { id: Date.now(), x: event.clientX, y: event.clientY };
     this.pointsEnergyService.addClick(click);
+  }
+
+  inviteFren() {
+    const botUsername = 'Chain_PostBot';
+
+    // Define the invitation message
+    const inviteMessage = `Join me in using ${botUsername} on Telegram!`;
+
+    // Formulate the link to open Telegram with pre-filled message
+    const telegramLink = `https://t.me/${botUsername}?text=${encodeURIComponent(inviteMessage)}`;
+
+    // Open the Telegram bot chat link in a new tab
+    window.open(telegramLink, '_blank');
   }
   goBack(): void {
     this.location.back();
