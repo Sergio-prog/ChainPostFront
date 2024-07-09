@@ -19,6 +19,8 @@ declare global {
 export class AppComponent {
   constructor(private router: Router) {}
   public initData: any;
+  public parsedObject: any;
+  public parsedObject1: any;
   ngOnInit() {
     // Subscribe to router events to detect route changes
     this.router.events
@@ -31,20 +33,21 @@ export class AppComponent {
     if (window.Telegram && window.Telegram.WebApp) {
       console.log('Telegram WebApp is available:', window.Telegram.WebApp);
 
-      this.initData = window.Telegram.WebApp.initData;
-
-      if (this.initData) {
-        try {
-          let converted = decodeURIComponent(this.initData);
-          let parsedObject = JSON.parse(converted);
-          console.log('Parsed Object:', parsedObject);
-        } catch (error) {
-          console.error('Error parsing JSON:', error);
-        }
-      } else {
-        this.initData = 'initData is empty or not available';
-        console.warn('initData is empty or not available');
-      }
+      this.initData = window.Telegram.WebAppUser;
+      this.parsedObject1 = JSON.parse(this.initData);
+      console.log('user: ', this.parsedObject1);
+      // if (this.initData) {
+      //   try {
+      //     let converted = decodeURIComponent(this.initData);
+      //     this.parsedObject = JSON.parse(converted);
+      //     console.log('Parsed Object:', this.parsedObject);
+      //   } catch (error) {
+      //     console.error('Error parsing JSON:', error);
+      //   }
+      // } else {
+      //   this.initData = 'initData is empty or not available';
+      //   console.warn('initData is empty or not available');
+      // }
     } else {
       console.log('Telegram WebApp is not available');
     }
