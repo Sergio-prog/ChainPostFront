@@ -10,6 +10,7 @@ import { Post } from '../models/post.model';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { PostsService } from '../services/posts.service';
 import { MatCardModule } from '@angular/material/card';
+import { ApiResponse } from '../models/api-response.model';
 
 @Component({
   selector: 'app-leaderboard',
@@ -63,7 +64,6 @@ export class LeaderboardComponent implements OnInit {
   private posts$ = new BehaviorSubject<Post[]>([]);
 
   newComment: string = '';
-  // posts: Post[] = [];
 
   ngOnInit(): void {
     try {

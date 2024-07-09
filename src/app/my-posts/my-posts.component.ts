@@ -7,6 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PostsService } from '../services/posts.service';
 import { CommonModule } from '@angular/common';
+import { Post } from '../models/post.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Component({
   selector: 'app-my-posts',

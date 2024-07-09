@@ -37,7 +37,8 @@
                 </li>
                 <li class="actions__item push-right">
                     <button mat-button (click)="toggleShare(post)">
-                        <mat-icon>arrow_upward</mat-icon> {{ post?.shares }}
+                        <!-- <mat-icon>arrow_upward</mat-icon> {{ post.shares }} -->
+                        <mat-icon>arrow_upward</mat-icon> {{ post.views_count }}
                     </button>
                 </li>
             </ul>

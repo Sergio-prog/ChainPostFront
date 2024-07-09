@@ -1,6 +1,6 @@
 <div class="header">
   <h1>Wallet</h1>
-  <div id="ton-connect" ></div>
+  <button class="wallet__button" mat-flat-button (click)="redirectToGame()">Game</button>
 </div>
 <mat-card>
     <mat-card-header>
@@ -8,7 +8,7 @@
         Balance
       </mat-card-title>
       <mat-card-title class="wallet__balance">
-        {{wallet.balance}} $POST
+        {{balance}} $POST
       </mat-card-title>
     </mat-card-header>
   </mat-card>
@@ -18,6 +18,7 @@
     <button class="wallet__button" mat-flat-button>Receive</button>
     <button class="wallet__button" mat-flat-button>Exchange</button>
     
+
   </div>
   <mat-card>
     <mat-card-header>

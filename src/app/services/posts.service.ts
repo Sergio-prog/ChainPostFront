@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { Post } from '../models/post.model';
-import { environment } from '../../environments/environments';
+import { environment } from '../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
@@ -12,10 +12,15 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<ApiResponse<Post>> {
-    return this.http.get<ApiResponse<Post>>(
-      `${environment.apiUrl}/posts/list?page_size=100`,
-    );
+    return this.http.get<ApiResponse<Post>>(`${environment.apiUrl}/posts/list`);
   }
+  // getPosts(): Observable<any> {
+  //   return this.http.get<any[]>(`${environment.apiUrl}/posts/list`);
+  // }
+
+  // getPosts(): Observable<any> {
+  //   return this.http.get(`${environment.apiUrl}/posts/list`);
+  // }
 
   getBalance(address: string): Observable<any> {
     return this.http.get(
